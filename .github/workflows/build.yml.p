@@ -19,9 +19,11 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Extract Zip File
+    - name: Extract Zip and Build APK
       run: |
         sudo apt-get install -y unzip
+        
+        # Zip file extract karein
         for file in *.zip; do
           if [ -f "$file" ]; then
             echo "Unzipping $file..."
@@ -29,13 +31,15 @@ jobs:
           fi
         done
 
-    - name: Find and Build Gradle Project
-      run: |
+        # Gradlew file ka exact path dhoondhein
         GRADLEW_PATH=$(find . -name "gradlew" -type f | head -n 1)
+
         if [ -z "$GRADLEW_PATH" ]; then
           echo "Error: gradlew file not found!"
           exit 1
         fi
+
+        # Us folder me jaakar APK build karein
         PROJECT_DIR=$(dirname "$GRADLEW_PATH")
         cd "$PROJECT_DIR"
         chmod +x gradlew
@@ -46,3 +50,4 @@ jobs:
       with:
         name: app-debug
         path: '**/build/outputs/apk/debug/*.apk'
+        
